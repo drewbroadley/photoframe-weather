@@ -1,0 +1,9 @@
+depency_packages:
+  - git-all
+  - libffi-dev
+  - libpq-dev
+  - python-dev
+  - python-yaml
+  - python-pip
+  - python-virtualenv
+  - python3-dev

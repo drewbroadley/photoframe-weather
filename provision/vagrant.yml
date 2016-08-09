@@ -1,0 +1,16 @@
+- hosts: all
+
+  vars:
+    project_root: /home/vagrant
+    project_folder: photoframe_weather
+    db_name: photoframe_weather
+    db_user: photoframe_weather
+    db_password:
+    virtual_env_folder: /home/vagrant/.virtualenvs
+    virtual_env_python: python3
+
+  roles:
+    - { role: common }
+    - { role: postgres }
+    - { role: virtualenv }
+    - { role: django }

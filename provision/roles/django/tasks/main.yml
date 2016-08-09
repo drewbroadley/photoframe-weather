@@ -1,0 +1,55 @@
+- name: Creates logs directory
+  become: yes
+  become_user: vagrant
+  file:
+    mode=0777
+    path="{{project_root}}/{{project_folder}}/logs"
+    owner=vagrant
+    group=vagrant
+    state=directory
+
+- name: Creates var directory
+  become: yes
+  become_user: vagrant
+  file:
+    mode=0777
+    path="{{project_root}}/{{project_folder}}/var"
+    owner=vagrant
+    group=vagrant
+    state=directory
+
+- name: ensure github.com is a known host
+  become: true
+  become_user: vagrant
+  lineinfile:
+    dest: "{{ project_root }}/.ssh/known_hosts"
+    owner: vagrant
+    group: vagrant
+    create: yes
+    state: present
+    line: "{{ lookup('pipe', 'ssh-keyscan -t rsa github.com') }}"
+    regexp: "^github\\.com"
+
+- name: Install packages inside the virtualenv.
+  pip: "requirements={{project_root}}/{{project_folder}}/requirements/dev.txt virtualenv={{virtual_env_folder}}/{{project_folder}}/ extra_args='--upgrade'"
+
+- name: Migrate Django database.
+  shell: "{{virtual_env_folder}}/{{project_folder}}/bin/python {{project_root}}/{{project_folder}}/manage.py migrate --noinput"
+
+- name: Update bashrc for easy celery process start
+  lineinfile:
+    dest="{{project_root}}/.bashrc"
+    line='alias runcelery="DJANGO_SETTINGS_MODULE="{{project_folder}}.settings.dev" celery worker --app={{project_folder}} -l info -B"'
+    owner=vagrant
+    state=present
+    insertafter=EOF
+    create=True
+
+- name: Update bashrc for easy server process start
+  lineinfile:
+    dest="{{project_root}}/.bashrc"
+    line='alias runserver="{{virtual_env_folder}}/{{project_folder}}/bin/python {{project_root}}/{{project_folder}}/manage.py runserver 0.0.0.0:8000"'
+    owner=vagrant
+    state=present
+    insertafter=EOF
+    create=True

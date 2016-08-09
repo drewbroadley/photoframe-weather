@@ -1,0 +1,27 @@
+- name: update server
+  become: yes
+  become_method: sudo
+  apt: update_cache=yes
+
+- name: upgrad server
+  become: yes
+  become_method: sudo
+  apt: upgrade=full
+
+- name: Update bashrc with update command
+  lineinfile:
+    dest="{{ project_root }}/.bashrc"
+    line='alias update="ansible-playbook --limit="default" --inventory-file=/home/vagrant/{{ project_folder }}/provision/inventory -v /home/vagrant/{{ project_folder }}/provision/vagrant.yml"'
+    owner=vagrant
+    state=present
+    insertafter=EOF
+    create=True
+
+- name: Update bashrc to move user to project directory
+  lineinfile:
+    dest=/home/vagrant/.bashrc
+    line='cd /home/vagrant/{{ project_folder }}/'
+    owner=vagrant
+    state=present
+    insertafter=EOF
+    create=True

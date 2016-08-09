@@ -1,0 +1,24 @@
+- name: Include packages list
+  include_vars: 'depency_packages'
+  when: depency_packages == ""
+
+- name: Install packages
+  become: yes
+  become_method: sudo
+  apt: pkg={{ item }} state=installed update_cache=yes
+  with_items: '{{depency_packages}}'
+
+- name: Creates directory
+  file: path='{{virtual_env_folder}}/' state=directory owner=vagrant group=vagrant mode=0775 recurse=yes
+
+- name: Manually create the initial virtualenv
+  command: virtualenv '{{virtual_env_folder}}/{{project_folder}}/' -p {{virtual_env_python}} creates='{{virtual_env_folder}}/{{project_folder}}/'
+
+- name: Update bashrc
+  lineinfile:
+    dest={{project_root}}/.bashrc
+    line='source {{virtual_env_folder}}/{{project_folder}}/bin/activate'
+    owner=vagrant
+    state=present
+    insertafter=EOF
+    create=True

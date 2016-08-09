@@ -1,0 +1,72 @@
+- name: Include packages list
+  include_vars: 'postgres_packages'
+  when: postgres_packages == ""
+
+- name: Install packages
+  become: yes
+  become_method: sudo
+  apt: pkg={{ item }} state=installed update_cache=yes
+  with_items: '{{postgres_packages}}'
+
+- name: Add host trust in pg_hba.conf
+  become: yes
+  become_method: sudo
+  lineinfile:
+    dest='/etc/postgresql/{{postgresql.version}}/main/pg_hba.conf'
+    line="host all all 10.0.2.2/24 trust"
+    state=present
+
+- name: Update local peer to trust pg_hba.conf
+  become: yes
+  become_method: sudo
+  lineinfile:
+    dest='/etc/postgresql/{{postgresql.version}}/main/pg_hba.conf'
+    regexp="^local   all             postgres                                peer"
+    backrefs=yes
+    state=present
+    line="local all postgres trust"
+
+- name: Update host md5 to trust pg_hba.conf
+  become: yes
+  become_method: sudo
+  lineinfile:
+    dest='/etc/postgresql/{{postgresql.version}}/main/pg_hba.conf'
+    regexp="^host    all             all             127.0.0.1/32            md5"
+    backrefs=yes
+    state=present
+    line="host all all 127.0.0.1/32 trust"
+
+- name: Update listen_addresses postgresql.conf
+  become: yes
+  become_method: sudo
+  lineinfile:
+    dest='/etc/postgresql/{{postgresql.version}}/main/postgresql.conf'
+    regexp="^#listen_addresses = 'localhost'"
+    backrefs=yes
+    state=present
+    line="listen_addresses = '*'"
+
+- name: Triggger postgres restart
+  debug: msg="trigger Restart Postgre"
+  notify: Restart Postgres
+  changed_when: true
+
+- name: Create Database
+  become: yes
+  become_user: postgres
+  postgresql_db: name={{ db_name }} encoding=UTF-8
+
+- name: Create User
+  become: yes
+  become_user: postgres
+  postgresql_user: name={{ db_user }} password={{ db_password }} state=present role_attr_flags=NOSUPERUSER,CREATEDB
+
+- name: Provide user with DB permissions
+  become: yes
+  become_user: postgres
+  postgresql_user: user={{ db_user }} db={{ db_name }} priv=ALL
+
+- name: Ensure potgres is running.
+  become: yes
+  become_method: sudo
+  service: name=postgresql state=started enabled=yes

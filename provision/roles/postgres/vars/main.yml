@@ -1,0 +1,9 @@
+postgres_packages:
+  - postgresql
+  - postgresql-client
+  - postgresql-contrib
+  - libpq-dev # Required for Ansible to interact with postgres
+  - python-psycopg2 # Required for Ansible to interact with postgres
+
+postgresql:
+  version: 9.3

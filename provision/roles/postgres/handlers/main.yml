@@ -1,0 +1,4 @@
+- name: Restart Postgres
+  become: yes
+  become_method: sudo
+  service: name=postgresql state=restarted
