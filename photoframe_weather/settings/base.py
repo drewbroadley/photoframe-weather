@@ -12,5 +12,7 @@ from .partials.paths import *
 
 from .partials.secret_key import *
 
+from .partials.templates import *
+
 
 

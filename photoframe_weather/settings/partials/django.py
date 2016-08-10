@@ -17,7 +17,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'raven.contrib.django.raven_compat',
     'corsheaders',
-    'core',
     'rest_framework',
 )
 
@@ -31,16 +30,10 @@ MIDDLEWARE_CLASSES = (
 
 # Django rest framework
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'api_partial_authentication.oauth_consumer.services.JWTTokenAuthentication',
-    ),
-    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
-    'ALLOWED_VERSIONS':  ('v1',  'v2'),
-    'DEFAULT_VERSION':  'v1',
-    'VERSION_PARAM': None
+    'DEFAULT_RENDERER_CLASSES': (
+       'rest_framework.renderers.JSONRenderer',
+       'rest_framework.renderers.BrowsableAPIRenderer',
+   )
 }
 
 # Name and email addresses of recipients
