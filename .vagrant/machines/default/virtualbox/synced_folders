@@ -1,0 +1,1 @@
+{"virtualbox":{"/home/photos":{"guestpath":"/home/photos","hostpath":"/Users/drew/Dropbox/Public/Photos/Screensaver","disabled":false,"__vagrantfile":true},"/home/vagrant/photoframe_weather":{"guestpath":"/home/vagrant/photoframe_weather","hostpath":"/Users/drew/Projects/photoframe_weather","disabled":false,"__vagrantfile":true}}}
