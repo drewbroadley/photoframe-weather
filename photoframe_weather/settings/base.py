@@ -1,5 +1,3 @@
-from .partials.database import *
-
 from .partials.django import *
 
 from .partials.i18n import *

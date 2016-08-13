@@ -7,6 +7,7 @@ body
     background-color: #333;
 
     -webkit-transition: background-image 3s ease-in-out;
+    -moz-transition: background-image 3s ease-in-out;
     transition: background-image 3s ease-in-out;
 }
 
@@ -28,8 +29,9 @@ div#weather
 
 div#weather
 {
-    text-shadow: 0px 0px 5px #000;
+    text-shadow: 0px 0px 10px #000;
     padding: 0px 30px 0px 30px;
+    font-size: 2em;
 }
 
 
@@ -37,7 +39,7 @@ div#weather
 div#weather div .icon
 {
     text-align: left;
-    font-size: 6.5em;
+    font-size: 10.5em;
     font-weight: 700;
     padding: 0px;
     display: block;
@@ -51,7 +53,7 @@ div#weather div .desc
 div#weather div .temp
 {
 
-    font-size: 8em;
+    font-size: 12em;
     margin-bottom: -35px;
     padding: 0px;
     font-family: 'Karla', sans-serif;
@@ -62,12 +64,10 @@ div#weather div .temp
 div#weather div .temp-feels-high-low
 {
     font-family: 'Karla', sans-serif;
-    font-size: 1.5em;
     margin-bottom: 10px;
 }
 
 div#weather div .desc
 {
     font-family: 'Rubik', sans-serif;
-    font-size: 1.5em;
 }

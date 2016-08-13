@@ -1,48 +1,51 @@
 from .base import *
 
-ALLOWED_HOSTS = ['*']
+import raven
 
-SERVER_ENV = "Production"
+from .partials.sentry import RAVEN_CONFIG
+from .partials.paths import *
 
-# SECURITY WARNING: don't run with debug turned on in production!
+ALLOWED_HOSTS=['*']
+
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'photoframe_weather',
+        'USER': 'photoframe_weather',
+        'HOST': 'localhost',
+        'PORT': '',           # Set to empty string for default.
+        'CONN_MAX_AGE': 600,  # number of seconds database connections should persist for
+    }
+}
+
+# "Dev catch all" property key by default in development
 DEBUG = False
 
-# Compress static files offline
-# http://django-compressor.readthedocs.org/en/latest/settings/#django.conf.settings.COMPRESS_OFFLINE
-
-COMPRESS_OFFLINE = True
-COMPRESS_ENABLED = True
-
-COMPRESS_CSS_FILTERS = [
-    'compressor.filters.css_default.CssAbsoluteFilter',
-    'compressor.filters.cssmin.CSSMinFilter',
-]
-
-# Enables error emails.
-CELERY_SEND_TASK_ERROR_EMAILS = True
-
-# Make sure we include the needed Middleware apps
-# Excluding logged in (admin) requests
-CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True
-
-LOGGING['loggers']['core']['handlers'].append('mail_admins')
-LOGGING['loggers']['django']['handlers'].append('mail_admins')
-
 DEFAULT_FROM_EMAIL = 'no-reply@broadleyspeaking.co.nz'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-EMAIL_BACKEND = 'django_ses.SESBackend'
 
-AWS_SES_REGION_NAME = 'us-west-2'
-AWS_SES_REGION_ENDPOINT = 'email.us-west-2.amazonaws.com'
+# As required by debug_toolbar
+INTERNAL_IPS = (
+    '10.0.2.2', # external
+    '127.0.0.1' # localhost
+)
 
-LOGGING['loggers']['core']['handlers'] = ['sentry']
-LOGGING['loggers']['core']['level'] = 'ERROR'
-LOGGING['loggers']['django']['handlers'] = ['sentry']
-LOGGING['loggers']['django']['level'] = 'ERROR'
-LOGGING['loggers']['oauth']['handlers'] = ['sentry']
-LOGGING['loggers']['oauth']['level'] = 'ERROR'
-LOGGING['loggers']['celery']['handlers'] = ['sentry']
-LOGGING['loggers']['celery']['level'] = 'ERROR'
+INSTALLED_APPS += (
+    #'debug_toolbar',
+    # 'debug_panel',
+)
+
+MIDDLEWARE_CLASSES = (
+    #'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'debug_panel.middleware.DebugPanelMiddleware',
+) + MIDDLEWARE_CLASSES
+
+
+RAVEN_CONFIG.update({
+    'release': raven.fetch_git_sha(DJANGO_ROOT)
+})
 
 try:
     from .local import *

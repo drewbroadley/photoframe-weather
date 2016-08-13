@@ -16,12 +16,10 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'raven.contrib.django.raven_compat',
-    'corsheaders',
     'rest_framework',
 )
 
 MIDDLEWARE_CLASSES = (
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -50,23 +48,3 @@ DEFAULT_FROM_EMAIL = '%s@penny.co.nz' % SITE_NAME
 ROOT_URLCONF = SITE_NAME + '.urls'
 
 WSGI_APPLICATION = SITE_NAME + '.wsgi.application'
-
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_METHODS = (
-    'GET',
-    'POST',
-    'PUT',
-    'PATCH',
-    'DELETE'
-)
-CORS_ALLOW_HEADERS = (
-    'x-requested-with',
-    'content-type',
-    'accept',
-    'origin',
-    'authorization',
-    'x-csrftoken',
-    'user-agent',
-    'accept-encoding'
-)
